@@ -22,7 +22,7 @@ def spike_decay(input_seq, weight_lambda, t_step, batch_size, size_F, device):
     # domains = [NvidiaGPUDomain(0)]
     with EnergyContext(handler=pandas_handler, domains=domains, start_tag='start_decay_loop') as ctx:
         for i, inp in enumerate(input_seq):
-            timestamps_result.append(time.time())
+            # timestamps_result.append(time.time())
             # ctx.record(tag=f'inp_el {i}: scale F')
             # for j in range(10):
             F *= lambda_tensor
@@ -32,8 +32,8 @@ def spike_decay(input_seq, weight_lambda, t_step, batch_size, size_F, device):
             F += inp
             # torch.cuda.default_stream(device=0).synchronize()
             # ctx.record(tag=f'inp_el {i}: sleep')
-            F_result.append(F[0,0,0])
-            time.sleep(t_step)
+            # F_result.append(F[0,0,0])
+            # time.sleep(t_step)
             # torch.cuda.default_stream(device=0).synchronize()
         torch.cuda.default_stream(device=0).synchronize()
     
@@ -42,12 +42,12 @@ def spike_decay(input_seq, weight_lambda, t_step, batch_size, size_F, device):
 
 config = {'gpu': 0}
 device = torch.device(f"cuda:{config['gpu']}") if config['gpu'] > -1 else torch.device('cpu')
-input_seq = [1, 2, 3, 4, 5, 6, 7, 8]
-weight_lambda = 0.8
+input_seq = [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]*682
+weight_lambda = 0.9
 t_step = 0
 batch_size = 128
 size_F = (37, 48)
-size_F = (4096, 4096)
+size_F = (64, 2656)
 
 spike_decay(input_seq, weight_lambda, t_step, batch_size, size_F, device)
 F_result, timestamps_result, energy_df = spike_decay(input_seq, weight_lambda, t_step, batch_size, size_F, device)
