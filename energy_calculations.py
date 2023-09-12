@@ -47,13 +47,13 @@ def forward_pass_memristor_ops(total_input, weights, plastic_weights, weight_lam
 
 
 
-config = {'gpu': -1}
-#config = {'gpu': 0}
+#config = {'gpu': -1}
+config = {'gpu': 0}
 device = torch.device(f"cuda:{config['gpu']}") if config['gpu'] > -1 else torch.device('cpu')
 
 pandas_handler = PandasHandler()
-#domains = [RaplPackageDomain(0), RaplDramDomain(0), NvidiaGPUDomain(0)]
-domains = [RaplPackageDomain(0)]
+domains = [RaplPackageDomain(0), RaplDramDomain(0), NvidiaGPUDomain(0)]
+#domains = [RaplPackageDomain(0)]
 
 
 num_steps = 10
