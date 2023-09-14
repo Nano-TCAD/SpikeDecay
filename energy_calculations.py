@@ -52,7 +52,8 @@ config = {'gpu': 0}
 device = torch.device(f"cuda:{config['gpu']}") if config['gpu'] > -1 else torch.device('cpu')
 
 pandas_handler = PandasHandler()
-domains = [RaplPackageDomain(0), RaplDramDomain(0), NvidiaGPUDomain(0)]
+# domains = [RaplPackageDomain(0), RaplDramDomain(0), NvidiaGPUDomain(0)]
+domains = [NvidiaGPUDomain(0)]
 #domains = [RaplPackageDomain(0)]
 
 
@@ -75,7 +76,7 @@ assoc = torch.rand(size_assoc, dtype=torch.float32, device=device)-0.5
 with EnergyContext(handler=pandas_handler, domains=domains, start_tag='start_forward_pass_loop') as ctx:
     for s in range(num_steps):
         ctx.record(tag=f'forward pass')
-        forward_pass_memristor_ops(total_input, weights, plastic_weights, weight_lambda, assoc, ctx)
+        forward_pass_memristor_ops(total_input, weights, plastic_weights, weight_lambda, assoc, ctx, 50000)
     torch.cuda.default_stream(device=0).synchronize()
 
 energy_df = pandas_handler.get_dataframe()
@@ -83,4 +84,4 @@ energy_df = pandas_handler.get_dataframe()
 print('Energy consmumption')
 print(energy_df)
 
-energy_df.to_csv('energy_df.csv')
+energy_df.to_csv('energy_df_a100.csv')
