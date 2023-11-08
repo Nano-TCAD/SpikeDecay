@@ -56,6 +56,8 @@ device = torch.device(f"cuda:{config['gpu']}") if config['gpu'] > -1 else torch.
 domains = [NvidiaGPUDomain(dev_id)]
 #domains = [RaplPackageDomain(0)]
 
+idle_consumption = 55.0  # Watt
+
 
 num_steps = 10
 max_reps_per_op = 32768 * 4
@@ -102,6 +104,7 @@ for i in range(10):
     print(f"M = {M}")
 
     df = energy_df[energy_df['tag'].isin(tags)]
+    df[f'nvidia_gpu_{dev_id}'] = df[f'nvidia_gpu_{dev_id}'] - idle_consumption * df['duration'] * 1000  # mJ
     df = df.drop(columns=['timestamp', 'duration'])
     df = df.groupby(['tag']).median()
     df['M'] = M
@@ -114,7 +117,7 @@ for i in range(10):
     # print('Energy consumption')
     # print(energy_df)
 
-    energy_df.to_csv(f'energy_df_a100_{M}.csv')
+    energy_df.to_csv(f'energy_df_a100_idle_{M}.csv')
 
 # print(total_df)
-total_df.to_csv(f'energy_df_a100_total.csv')
+total_df.to_csv(f'energy_df_a100_idle_total.csv')
