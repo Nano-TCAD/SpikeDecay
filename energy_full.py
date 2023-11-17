@@ -87,8 +87,9 @@ if __name__ == '__main__':
     tags = ['Total Weight', 'Activation', 'Decay', 'STP']
 
     for dt, tdt  in ((np.float16, torch.float16), (np.float32, torch.float32)):
+    # for dt, tdt  in ((np.float32, torch.float32), ):
 
-            for i in range(7, 10):
+            for i in range(10):
 
                 M = 2**(6+i)
                 # reps_per_op = max_reps_per_op // 2**i
